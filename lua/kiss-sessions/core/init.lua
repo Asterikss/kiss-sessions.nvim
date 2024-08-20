@@ -1,4 +1,9 @@
 local util = require("kiss-sessions.util")
+local actions = require("telescope.actions")
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local action_state = require("telescope.actions.state")
+local conf = require("telescope.config").values
 
 local M = {}
 
@@ -43,6 +48,49 @@ local _rename_session = function(session_name)
     end
 end
 
+local _display_sessions = function (sessions, cr_action)
+    local sessions_picker = function(opts)
+        opts = opts or {}
+        pickers.new(opts, {
+            prompt_title = "Ξ Sessions Ξ",
+            finder = finders.new_table {
+                results = sessions,
+            },
+            sorter = conf.generic_sorter(opts),
+            attach_mappings = function(prompt_bufnr, map)
+                map({"i", "n"}, "<CR>", function()
+                    local selection = action_state.get_selected_entry()
+                    actions.close(prompt_bufnr)
+                    cr_action(selection.value)
+                end)
+                map("i", "<C-d>", function()
+                    local selection = action_state.get_selected_entry()
+                    actions.close(prompt_bufnr)
+
+                    local confirm = vim.fn.input("Delete " .. selection.value .. "? (y/N): ")
+                    if confirm ~= "y" then
+                        print("Deletion canceled")
+                        return
+                    end
+
+                    if current_session == selection.value then
+                        current_session = nil
+                    end
+                    local p = session_dir .. selection.value .. ".vim"
+                    vim.loop.fs_unlink(p) -- vim.uv
+                    print("Session deleted")
+                end)
+                map("i", "<C-r>", function()
+                    local selection = action_state.get_selected_entry()
+                    actions.close(prompt_bufnr)
+                    _rename_session(selection.value)
+                end)
+                return true
+            end,
+        }):find()
+    end
+    sessions_picker(require("telescope.themes").get_dropdown({}))
+end
         local session_name = vim.fn.input("Session name: ")
         if session_name == "" then
             print("Session name cannot be empty")
