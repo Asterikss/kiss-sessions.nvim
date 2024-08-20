@@ -1,5 +1,5 @@
 local Path = require("plenary.path")
-local Job = require("plenary.Job")
+local Job = require("plenary.job")
 
 local M = {}
 
@@ -30,7 +30,7 @@ M.ensure_session_dir_exists = function (path)
     end
 end
 
-M.session_exists = function(path)
+M.session_exists = function (path)
     return Path:new(path):exists()
 end
 
