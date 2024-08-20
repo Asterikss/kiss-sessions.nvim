@@ -21,6 +21,28 @@ local _load_session = function(session_name)
     current_session = session_name
 end
 
+local _rename_session = function(session_name)
+    local new_name = vim.fn.input("New name (" .. session_name .. "): ", session_name)
+    if new_name == "" then
+        print("Session name cannot be empty")
+        return
+    end
+
+    local new_path = session_dir .. new_name .. ".vim"
+    if util.session_exists(new_path) then
+        print("Session name already exists")
+        return
+    end
+
+    local old_path = session_dir .. session_name .. ".vim"
+    vim.loop.fs_rename(old_path, new_path) -- vim.uv
+    print("Session " .. session_name .. " renamed to " .. new_name)
+
+    if current_session == session_name then
+        current_session = new_name
+    end
+end
+
         local session_name = vim.fn.input("Session name: ")
         if session_name == "" then
             print("Session name cannot be empty")
