@@ -91,6 +91,26 @@ local _display_sessions = function (sessions, cr_action)
     end
     sessions_picker(require("telescope.themes").get_dropdown({}))
 end
+
+M.LoadSession = function ()
+    local sessions = util.get_sessions(session_dir)
+
+    if current_session then
+        for i, session_name in ipairs(sessions) do
+            if session_name == current_session then
+                table.remove(sessions, i)
+                break
+            end
+        end
+        table.insert(sessions, current_session .. "    * current session *")
+    end
+
+    _display_sessions(sessions, _load_session)
+end
+
+
+M.SaveSession2 = function ()
+    if current_session then
         local session_name = vim.fn.input("Session name: ")
         if session_name == "" then
             print("Session name cannot be empty")
