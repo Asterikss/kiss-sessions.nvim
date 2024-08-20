@@ -109,9 +109,6 @@ M.LoadSession = function ()
 end
 
 M.SaveSession = function ()
-M.SaveSession2 = function ()
-M.SaveSession2 = function ()
-M.SaveSession2 = function ()
     local sessions = util.get_sessions(session_dir)
 
     if current_session then
