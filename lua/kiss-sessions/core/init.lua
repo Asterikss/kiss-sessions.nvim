@@ -3,17 +3,24 @@ local util = require("kiss-sessions.util")
 local M = {}
 
 local session_dir
-local loadFrom = ""
+local current_session
+
+local new_session_banner = "* New Session *"
 
 M.setup = function (opts)
-    session_dir = opts.session_dir or "./.dev/.sessions"
+    session_dir = opts.session_dir or "./.dev/.sessions/"
 end
 
-M.SaveSession = function()
-    if loadFrom ~= "" then
-        local p = session_dir .. loadFrom .. ".vim"
-        vim.cmd("mksession! " .. p)
-    else
+local _load_session = function(session_name)
+    local path = session_dir .. session_name .. ".vim"
+    if not util.session_exists(path) then
+        print("Session does not exist")
+        return
+    end
+    vim.cmd("source " .. path)
+    current_session = session_name
+end
+
         local session_name = vim.fn.input("Session name: ")
         if session_name == "" then
             print("Session name cannot be empty")
