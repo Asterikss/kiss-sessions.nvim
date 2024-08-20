@@ -108,34 +108,54 @@ M.LoadSession = function ()
     _display_sessions(sessions, _load_session)
 end
 
-
+M.SaveSession = function ()
 M.SaveSession2 = function ()
+M.SaveSession2 = function ()
+M.SaveSession2 = function ()
+    local sessions = util.get_sessions(session_dir)
+
     if current_session then
-        local session_name = vim.fn.input("Session name: ")
-        if session_name == "" then
-            print("Session name cannot be empty")
-            return
+        for i, session_name in ipairs(sessions) do
+            if session_name == current_session then
+                table.remove(sessions, i)
+                break
+            end
         end
-
-        util.create_dir(session_dir)
-
-        local p = session_dir .. session_name .. ".vim"
-
-        local session_exists = util.session_exists(p)
-
-        if session_exists then
-            print("Session name already exists")
-        end
-
-        vim.cmd("mksession! " .. p)
-
-        loadFrom = session_name
-
-        vim.cmd([[echo "\n"]])
+        table.insert(sessions, 1, current_session .. "   <- save on top of current session")
+    else
+        table.insert(sessions, 1, new_session_banner)
     end
 
-    vim.cmd([[echo ""]])
-    print("Session " .. loadFrom .. " saved")
+    local save_session = function (session_option)
+        if session_option == new_session_banner then
+            local new_session_name = vim.fn.input("Session name: ")
+            if new_session_name == "" then
+                print("Session name cannot be empty")
+                return
+            end
+
+            util.ensure_session_dir_exists(session_dir)
+
+            local path = session_dir .. new_session_name .. ".vim"
+
+            if util.session_exists(path) then
+                print("Session name already exists")
+                return
+            end
+
+            vim.cmd("mksession! " .. path)
+
+            current_session = new_session_name
+
+            print("Session " .. session_option .. "has been created successfully")
+        else
+            -- already existing session choosen
+            vim.cmd("mksession! " .. session_dir .. session_option .. ".vim")
+            print("Session " .. session_option .. "has been overridden successfully")
+        end
+    end
+
+    _display_sessions(sessions, save_session)
 end
 
 return M
