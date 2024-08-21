@@ -100,11 +100,11 @@ local _rename_session = function(session_name)
     end
 end
 
-local _display_sessions = function (sessions, cr_action)
+local _display_sessions = function (sessions, title, cr_action)
     local sessions_picker = function(opts)
         opts = opts or {}
         pickers.new(opts, {
-            prompt_title = "Ξ Sessions Ξ",
+            prompt_title = "Ξ " .. title .. " Ξ",
             finder = finders.new_table {
                 results = sessions,
             },
@@ -163,7 +163,7 @@ M.LoadSession = function ()
         table.insert(sessions, current_session .. "    * current session *")
     end
 
-    _display_sessions(sessions, _load_session)
+    _display_sessions(sessions, "Sessions", _load_session)
 end
 
 M.SaveSession = function ()
@@ -210,7 +210,7 @@ M.SaveSession = function ()
         end
     end
 
-    _display_sessions(sessions, save_session)
+    _display_sessions(sessions, "Sessions (Save)", save_session)
 end
 
 M.SaveDefaultSessionAndQuit = function ()
