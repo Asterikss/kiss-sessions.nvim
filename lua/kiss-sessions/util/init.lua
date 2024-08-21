@@ -10,7 +10,6 @@ M.get_sessions = function (session_dir)
         command = 'ls',
         args = {'-lt', session_dir},
         on_stdout = function(_, line)
-            print(line)
             -- Skip the first line ("total X")
             if not line:match("^total") then
                 -- Extract the file name from the line
