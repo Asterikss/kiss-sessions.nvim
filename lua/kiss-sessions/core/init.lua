@@ -113,7 +113,13 @@ local _display_sessions = function (sessions, cr_action)
                 map({"i", "n"}, "<CR>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
-                    cr_action(selection.value)
+
+                    local selection_value = selection.value
+                    if selection.index == 1 then
+                        selection_value = string.gsub(selection_value, current_session_pattern, "")
+                    end
+
+                    cr_action(selection_value)
                 end)
                 map("i", "<C-d>", function()
                     local selection = action_state.get_selected_entry()
