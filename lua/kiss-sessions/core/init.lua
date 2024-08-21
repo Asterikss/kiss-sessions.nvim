@@ -28,6 +28,16 @@ local _load_session = function(session_name)
     current_session = session_name
 end
 
+local LoadDefatulSession = function ()
+    if not util.session_exists(session_dir .. default_session_name .. ".vim") then
+        print("Default session '" .. default_session_name .. "' does not exist")
+    else
+        _load_session(default_session_name)
+        current_session = default_session_name
+    end
+end
+M.LoadDefatulSession = LoadDefatulSession
+
 local _rename_session = function(session_name)
     local new_name = vim.fn.input("New name (" .. session_name .. "): ", session_name)
     if new_name == "" then
