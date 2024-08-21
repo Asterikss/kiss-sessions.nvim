@@ -207,4 +207,14 @@ M.SaveSession = function ()
     _display_sessions(sessions, save_session)
 end
 
+M.SaveDefaultSessionAndQuit = function ()
+    util.ensure_session_dir_exists(session_dir)
+
+    local path = session_dir .. default_session_name .. ".vim"
+
+    vim.cmd("wa")
+    vim.cmd("mks! " .. path)
+    vim.cmd("qa")
+end
+
 return M
