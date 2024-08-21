@@ -160,7 +160,7 @@ M.LoadSession = function ()
                 break
             end
         end
-        table.insert(sessions, current_session .. "    * current session *")
+        table.insert(sessions, current_session .. current_session_banner)
     end
 
     _display_sessions(sessions, "Sessions", _load_session)
@@ -176,7 +176,8 @@ M.SaveSession = function ()
                 break
             end
         end
-        table.insert(sessions, 1, current_session .. "   <- save on top of current session")
+        table.insert(sessions, 1, new_session_banner)
+        table.insert(sessions, 1, current_session .. current_session_banner)
     else
         table.insert(sessions, 1, new_session_banner)
     end
@@ -198,15 +199,16 @@ M.SaveSession = function ()
                 return
             end
 
-            vim.cmd("mksession! " .. path)
+            vim.cmd("mks! " .. path)
 
             current_session = new_session_name
 
             print("Session " .. session_option .. "has been created successfully")
         else
             -- already existing session choosen
-            vim.cmd("mksession! " .. session_dir .. session_option .. ".vim")
+            vim.cmd("mks! " .. session_dir .. session_option .. ".vim")
             print("Session " .. session_option .. "has been overridden successfully")
+            current_session = session_option
         end
     end
 
