@@ -38,6 +38,39 @@ local LoadDefatulSession = function ()
 end
 M.LoadDefatulSession = LoadDefatulSession
 
+local _find_git_root_or_cwd = function ()
+    -- Use the current buffer's path as the starting point for the git search
+    local current_file = vim.api.nvim_buf_get_name(0)
+    local current_dir
+    local cwd = vim.fn.getcwd()
+
+    if current_file == "" then
+        current_dir = cwd
+    else
+        -- When opening a dir with neovim (nvim .), the code in else block would strip the last
+        -- directory intead of the name of the file. This causes errors, so there is a check.
+        if vim.fn.isdirectory(current_file) == 1 then
+            -- current_dir = current_file
+            -- this does not work for example with oil
+            -- "oil:///home/..." will not work with the git command
+            -- this does not matter if _find_git_root() is executed once on startup,
+            -- but if it would be executed before e.g. saving a session then that
+            -- could fail given that the user navigated to a different project from
+            -- within neovim. Could just strip the prefix. For now it does not matter.
+            current_dir = cwd
+        else
+            -- Extract the directory from the current file's path
+            current_dir = vim.fn.fnamemodify(current_file, ":h")
+        end
+    end
+    -- Find the Git root directory from the current file's path
+    local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
+    if vim.v.shell_error ~= 0 then
+      return cwd
+    end
+    return git_root
+end
+
 local _rename_session = function(session_name)
     local new_name = vim.fn.input("New name (" .. session_name .. "): ", session_name)
     if new_name == "" then
