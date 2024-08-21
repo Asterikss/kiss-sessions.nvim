@@ -92,7 +92,7 @@ local _rename_session = function(session_name)
     end
 
     local old_path = session_dir .. session_name .. ".vim"
-    vim.loop.fs_rename(old_path, new_path) -- vim.uv
+    vim.uv.fs_rename(old_path, new_path)
     print("Session " .. session_name .. " renamed to " .. new_name)
 
     if current_session == session_name then
@@ -129,7 +129,7 @@ local _display_sessions = function (sessions, cr_action)
                         current_session = nil
                     end
                     local p = session_dir .. selection.value .. ".vim"
-                    vim.loop.fs_unlink(p) -- vim.uv
+                    vim.uv.fs_unlink(p)
                     print("Session deleted")
                 end)
                 map("i", "<C-r>", function()
