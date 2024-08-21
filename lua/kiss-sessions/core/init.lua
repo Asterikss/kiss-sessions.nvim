@@ -113,35 +113,32 @@ local _display_sessions = function (sessions, title, cr_action)
                 map({"i", "n"}, "<CR>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
-
-                    local selection_value = selection.value
-                    if selection.index == 1 then
-                        selection_value = string.gsub(selection_value, current_session_pattern, "")
-                    end
-
+                    local selection_value = string.gsub(selection.value, current_session_pattern, "")
                     cr_action(selection_value)
                 end)
                 map("i", "<C-d>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
+                    local selection_value = string.gsub(selection.value, current_session_pattern, "")
 
-                    local confirm = vim.fn.input("Delete " .. selection.value .. "? (y/N): ")
+                    local confirm = vim.fn.input("Delete " .. selection_value .. "? (y/N): ")
                     if confirm ~= "y" then
                         print("Deletion canceled")
                         return
                     end
 
-                    if current_session == selection.value then
+                    if current_session == selection_value then
                         current_session = nil
                     end
-                    local p = session_dir .. selection.value .. ".vim"
+                    local p = session_dir .. selection_value .. ".vim"
                     vim.uv.fs_unlink(p)
                     print("Session deleted")
                 end)
                 map("i", "<C-r>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
-                    _rename_session(selection.value)
+                    local selection_value = string.gsub(selection.value, current_session_pattern, "")
+                    _rename_session(selection_value)
                 end)
                 return true
             end,
@@ -203,11 +200,11 @@ M.SaveSession = function ()
 
             current_session = new_session_name
 
-            print("Session " .. session_option .. "has been created successfully")
+            print("Session " .. new_session_name .. " has been created successfully")
         else
             -- already existing session choosen
             vim.cmd("mks! " .. session_dir .. session_option .. ".vim")
-            print("Session " .. session_option .. "has been overridden successfully")
+            print("Session " .. session_option .. " has been overridden successfully")
             current_session = session_option
         end
     end
