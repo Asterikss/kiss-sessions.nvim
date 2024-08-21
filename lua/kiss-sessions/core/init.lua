@@ -9,17 +9,19 @@ local M = {}
 
 local session_dir
 local current_session
-
-local new_session_banner = "* New Session *"
+local default_session_name
 
 M.setup = function (opts)
     session_dir = opts.session_dir or "./.dev/.sessions/"
 end
+local new_session_banner = "Δ New Session Δ"
+local current_session_banner = "      <- current session Δ"
+local current_session_pattern = "%s*<%- current session Δ$"
 
 local _load_session = function(session_name)
     local path = session_dir .. session_name .. ".vim"
     if not util.session_exists(path) then
-        print("Session does not exist")
+        print("Session " .. session_name .. " does not exist")
         return
     end
     vim.cmd("source " .. path)
