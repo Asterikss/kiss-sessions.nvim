@@ -11,9 +11,6 @@ local session_dir
 local current_session
 local default_session_name
 
-M.setup = function (opts)
-    session_dir = opts.session_dir or "./.dev/.sessions/"
-end
 local new_session_banner = "Δ New Session Δ"
 local current_session_banner = "      <- current session Δ"
 local current_session_pattern = "%s*<%- current session Δ$"
@@ -69,6 +66,16 @@ local _find_git_root_or_cwd = function ()
       return cwd
     end
     return git_root
+end
+
+M.setup = function (opts)
+    session_dir = _find_git_root_or_cwd() .. (opts.session_dir or "/.dev/.sessions/")
+    default_session_name = opts.default_session_name or "Session"
+    vim.api.nvim_create_user_command(
+        "LoadDefatulSession",
+        LoadDefatulSession,
+        {desc = "Load default session"}
+    )
 end
 
 local _rename_session = function(session_name)
