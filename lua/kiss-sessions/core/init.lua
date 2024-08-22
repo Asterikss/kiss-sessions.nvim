@@ -16,7 +16,7 @@ local current_session_banner = "      <- current session Δ"
 local current_session_pattern = "%s*<%- current session Δ$"
 
 local _load_session = function(session_name)
-    local path = session_dir .. session_name .. ".vim"
+    local path = session_dir .. session_name
     if not util.session_exists(path) then
         print("Session " .. session_name .. " does not exist")
         return
@@ -26,7 +26,7 @@ local _load_session = function(session_name)
 end
 
 local LoadDefatulSession = function ()
-    if not util.session_exists(session_dir .. default_session_name .. ".vim") then
+    if not util.session_exists(session_dir .. default_session_name) then
         print("Default session '" .. default_session_name .. "' does not exist")
     else
         _load_session(default_session_name)
@@ -85,13 +85,13 @@ local _rename_session = function(session_name)
         return
     end
 
-    local new_path = session_dir .. new_name .. ".vim"
+    local new_path = session_dir .. new_name
     if util.session_exists(new_path) then
         print("Session name already exists")
         return
     end
 
-    local old_path = session_dir .. session_name .. ".vim"
+    local old_path = session_dir .. session_name
     vim.uv.fs_rename(old_path, new_path)
     print("Session " .. session_name .. " renamed to " .. new_name)
 
@@ -130,7 +130,7 @@ local _display_sessions = function (sessions, title, cr_action)
                     if current_session == selection_value then
                         current_session = nil
                     end
-                    local p = session_dir .. selection_value .. ".vim"
+                    local p = session_dir .. selection_value
                     vim.uv.fs_unlink(p)
                     print("Session deleted")
                 end)
@@ -189,7 +189,7 @@ M.SaveSession = function ()
 
             util.ensure_session_dir_exists(session_dir)
 
-            local path = session_dir .. new_session_name .. ".vim"
+            local path = session_dir .. new_session_name
 
             if util.session_exists(path) then
                 print("Session name already exists")
@@ -203,7 +203,7 @@ M.SaveSession = function ()
             print("Session " .. new_session_name .. " has been created successfully")
         else
             -- already existing session choosen
-            vim.cmd("mks! " .. session_dir .. session_option .. ".vim")
+            vim.cmd("mks! " .. session_dir .. session_option)
             print("Session " .. session_option .. " has been overridden successfully")
             current_session = session_option
         end
@@ -215,7 +215,7 @@ end
 M.SaveDefaultSessionAndQuit = function ()
     util.ensure_session_dir_exists(session_dir)
 
-    local path = session_dir .. default_session_name .. ".vim"
+    local path = session_dir .. default_session_name
 
     vim.cmd("wa")
     vim.cmd("mks! " .. path)
