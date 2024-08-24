@@ -13,7 +13,7 @@ M.get_sessions = function (session_dir)
             -- Skip the first line ("total X")
             if not line:match("^total") then
                 -- Extract the file name from the line
-                local filename = line:match("%s([^%s]+)$"):sub(1, -5)
+                local filename = line:match("%s([^%s]+)$")
             if filename then
                     table.insert(sessions, filename)
                 end
