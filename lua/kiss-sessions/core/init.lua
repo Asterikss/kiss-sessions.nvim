@@ -22,6 +22,7 @@ local _load_session = function(session_name)
         return
     end
     vim.cmd("source " .. path)
+    vim.cmd("silent !touch " .. path)
     current_session = session_name
 end
 
