@@ -120,6 +120,10 @@ local _display_sessions = function (sessions, title, cr_action)
                 map("i", "<C-d>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
+                    if selection == new_session_banner then
+                        print("No, you can't do that")
+                        return
+                    end
                     local selection_value = string.gsub(selection.value, current_session_pattern, "")
 
                     local confirm = vim.fn.input("Delete " .. selection_value .. "? (y/N): ")
@@ -138,6 +142,10 @@ local _display_sessions = function (sessions, title, cr_action)
                 map("i", "<C-r>", function()
                     local selection = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
+                    if selection == new_session_banner then
+                        print("No, you can't do that")
+                        return
+                    end
                     local selection_value = string.gsub(selection.value, current_session_pattern, "")
                     _rename_session(selection_value)
                 end)
