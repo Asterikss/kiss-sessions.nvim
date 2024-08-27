@@ -160,12 +160,7 @@ M.LoadSession = function ()
     local sessions = util.get_sessions(session_dir)
 
     if current_session then
-        for i, session_name in ipairs(sessions) do
-            if session_name == current_session then
-                table.remove(sessions, i)
-                break
-            end
-        end
+        sessions = util.remove_session_by_name(sessions, current_session)
         table.insert(sessions, current_session .. current_session_banner)
     end
 
@@ -176,12 +171,7 @@ M.SaveSession = function ()
     local sessions = util.get_sessions(session_dir)
 
     if current_session then
-        for i, session_name in ipairs(sessions) do
-            if session_name == current_session then
-                table.remove(sessions, i)
-                break
-            end
-        end
+        sessions = util.remove_session_by_name(sessions, current_session)
         table.insert(sessions, 1, new_session_banner)
         table.insert(sessions, 1, current_session .. current_session_banner)
     else

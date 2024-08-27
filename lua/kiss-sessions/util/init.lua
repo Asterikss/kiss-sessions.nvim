@@ -33,4 +33,14 @@ M.session_exists = function (path)
     return Path:new(path):exists()
 end
 
+M.remove_session_by_name = function (sessions, target_session_name)
+    for i, session_name in ipairs(sessions) do
+        if session_name == target_session_name then
+            table.remove(sessions, i)
+            return sessions
+        end
+    end
+    return sessions
+end
+
 return M
