@@ -1,12 +1,9 @@
-local Path = require("plenary.path")
-local Job = require("plenary.job")
-
 local M = {}
 
 M.get_sessions = function (session_dir)
     local sessions = {}
 
-    Job:new({
+    require("plenary.job"):new({
         command = 'ls',
         args = {'-lt', session_dir},
         on_stdout = function(_, line)
@@ -24,13 +21,14 @@ M.get_sessions = function (session_dir)
 end
 
 M.ensure_session_dir_exists = function (path)
+    local Path = require("plenary.path")
     if not Path:new(path):exists() then
         Path:new(path):mkdir({ parents = true })
     end
 end
 
 M.session_exists = function (path)
-    return Path:new(path):exists()
+    return require("plenary.path"):new(path):exists()
 end
 
 M.remove_session_by_name = function (sessions, target_session_name)

@@ -1,9 +1,4 @@
 local util = require("kiss-sessions.util")
-local actions = require("telescope.actions")
-local pickers = require("telescope.pickers")
-local finders = require("telescope.finders")
-local action_state = require("telescope.actions.state")
-local conf = require("telescope.config").values
 
 local M = {}
 
@@ -102,6 +97,11 @@ local _rename_session = function(session_name)
 end
 
 local _display_sessions = function (sessions, title, cr_action)
+    local actions = require("telescope.actions")
+    local pickers = require("telescope.pickers")
+    local finders = require("telescope.finders")
+    local action_state = require("telescope.actions.state")
+    local conf = require("telescope.config").values
     local sessions_picker = function(opts)
         opts = opts or {}
         pickers.new(opts, {
