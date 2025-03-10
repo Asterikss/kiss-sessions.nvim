@@ -65,7 +65,7 @@ local _find_git_root_or_cwd = function ()
 end
 
 M.setup = function (opts)
-    session_dir = _find_git_root_or_cwd() .. (opts.session_dir or "/.dev/.sessions/")
+    session_dir = _find_git_root_or_cwd() .. (opts.session_dir or "/../.dev/.sessions/")
     default_session_name = opts.default_session_name or "Session"
     vim.api.nvim_create_user_command(
         "LoadDefatulSession",
