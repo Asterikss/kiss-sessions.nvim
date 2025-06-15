@@ -3,7 +3,7 @@ local core = require('kiss-sessions.core')
 return {
   SaveSession = core.SaveSession,
   LoadSession = core.LoadSession,
-  LoadDefatulSession = core.LoadDefatulSession,
+  LoadDefaultSession = core.LoadDefaultSession,
   SaveDefaultSessionAndQuit = core.SaveDefaultSessionAndQuit,
   setup = core.setup,
 }

@@ -21,7 +21,7 @@ local _load_session = function(session_name)
   current_session = session_name
 end
 
-local LoadDefatulSession = function()
+local LoadDefaultSession = function()
   if not util.session_exists(session_dir .. default_session_name) then
     print("Default session '" .. default_session_name .. "' does not exist")
   else
@@ -29,7 +29,7 @@ local LoadDefatulSession = function()
     current_session = default_session_name
   end
 end
-M.LoadDefatulSession = LoadDefatulSession
+M.LoadDefaultSession = LoadDefaultSession
 
 local _find_git_root_or_cwd = function()
   -- Use the current buffer's path as the starting point for the git search
@@ -67,7 +67,7 @@ end
 M.setup = function(opts)
   session_dir = _find_git_root_or_cwd() .. (opts.session_dir or '/../.dev/.sessions/')
   default_session_name = opts.default_session_name or 'Session'
-  vim.api.nvim_create_user_command('LoadDefatulSession', LoadDefatulSession, { desc = 'Load default session' })
+  vim.api.nvim_create_user_command('LoadDefaultSession', LoadDefaultSession, { desc = 'Load default session' })
 end
 
 local _rename_session = function(session_name)
